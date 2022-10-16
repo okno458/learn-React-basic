@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>getSnapshotBeforeUpdate的使用场景</title>
+</head>
+<style>
+</style>
+<body>
+    <!-- 准备好一个 “容器” -->
+    <div id="text">
+
+    </div>
+    <!--引入react核心库-->
+    <script src="../js/17.0.1/react.development.js"></script>
+    <!--引入react-dom,用于支持react操作dom 核心库必须要在react-dom之前引用-->
+    <script src="../js/17.0.1/react-dom.development.js"></script>
+    <!-- 引入babel，用于将jsx转为js   -->
+    <script src="../js/17.0.1/babel.min.js"></script>
+    <!-- 引入props，用于对组件标签属性进行限制  -->
+    <script src="../js/17.0.1/prop-types.js"></script>
+    <script type="text/babel">
+        class Timer extends React.Component {
+            state = {date:new Date()}
+            componentDidMount() {
+                setInterval(() => {
+                    this.setState({date:new Date()});
+                },1000)
+            }
+            render() {
+                return (
+                    <div>
+                        <h1>Hello</h1>
+                        <input type="text"/>
+                        <span>现在是：{this.state.date.toTimeString()} <input type="text"/> </span>
+                    </div>
+                )
+            }
+        }
+        ReactDOM.render(<Timer/>,document.getElementById("text"))
+    </script>
+</body>
+</html>

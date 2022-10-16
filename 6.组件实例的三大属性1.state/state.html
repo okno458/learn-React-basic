@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>state</title>
+</head>
+<body>
+    <!-- 准备好一个 “容器” -->
+    <div id="text">
+
+    </div>
+    <!--引入react核心库-->
+    <script src="../js/react.development.js"></script>
+    <!--引入react-dom,用于支持react操作dom 核心库必须要在react-dom之前引用-->
+    <script src="../js/react-dom.development.js"></script>
+    <!-- 引入babel，用于将jsx转为js   -->
+    <script src="../js/babel.min.js"></script>
+    <script type="text/babel">
+        //1.创建组件
+        class Weather extends React.Component{
+            //构造器会调用几次？ ———— 1次，因为只生成了1个组件实例
+            constructor(props) {
+                super(props);
+                //初始化状态（state）
+                this.state = {isHot:true,wind:'微风'};
+                //解决changeWeather中this指向问题
+                this.changeWeather = this.changeWeather.bind(this)
+            }
+            //render会调用几次？ ———— 1 + n 次，初始化会调用一次，每修改n次状态，就会调用n次，n是状态更新的次数
+            render(){
+                const {isHot,wind} = this.state
+                //读取状态
+                return <h1 onClick={this.changeWeather}>今天天气很{isHot ? '炎热' : '凉爽' }，{wind}</h1>
+            }
+            //此处changeWeather放在了Weather的原型对象上，供实例使用
+            //由于changeWeather是作为onClick的回调，所以不是通过实例调用的，而是直接调用
+            //由于类中调用实例方法会开启局部的严格模式，所以changeWeather中的this为undefined
+            //changeWeather会调用几次？ ———— 触发多少次回调事件，就会调用多少次
+            changeWeather() {
+                //状态（state）不能直接更改，要借助一个内置的API去更改
+                // this.state.isHot = !this.state.isHot//此处为直接更改
+                //状态必须通过setState进行修改,且更新状态是合并，不是替换
+                this.setState({
+                    isHot:!this.state.isHot
+                })
+            }
+        }
+        //2.渲染组件到页面
+        ReactDOM.render(<Weather/>,document.getElementById('text'))
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>函数式组件使用props</title>
+</head>
+<body>
+    <!-- 准备好一个 “容器” -->
+    <div id="text1">
+
+    </div>
+    <!--引入react核心库-->
+    <script src="../js/react.development.js"></script>
+    <!--引入react-dom,用于支持react操作dom 核心库必须要在react-dom之前引用-->
+    <script src="../js/react-dom.development.js"></script>
+    <!-- 引入babel，用于将jsx转为js   -->
+    <script src="../js/babel.min.js"></script>
+    <!-- 引入props，用于对组件标签属性进行限制  -->
+    <script src="../js/prop-types.js"></script>
+    <script type="text/babel">
+        //创建组件
+        //函数式组件可以接收到一个名为props的参数，通过组件标签传递的属性会被收集到props中，props值为一个对象
+        function Person(props) {
+            const {name,age,sex} = props
+            return (
+                <ul>
+                    <li>姓名：{name}</li>
+                    <li>性别：{sex}</li>
+                    <li>年龄：{age}</li>
+                </ul>
+            )
+        }
+        Person.propTypes = {
+            name:PropTypes.string.isRequired,
+            sex:PropTypes.string,
+            age:PropTypes.number,
+        }
+
+        Person.defaultProps = {
+            sex:'男',
+            age:18
+        }
+
+        ReactDOM.render(<Person name="jerry" age={18} sex='female' />,document.getElementById('text1'))
+
+    </script>
+</body>
+</html>
+

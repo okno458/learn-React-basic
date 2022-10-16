@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>高阶函数——函数柯里化</title>
+</head>
+<body>
+    <!-- 准备好一个 “容器” -->
+    <div id="text">
+
+    </div>
+    <!--引入react核心库-->
+    <script src="../js/react.development.js"></script>
+    <!--引入react-dom,用于支持react操作dom 核心库必须要在react-dom之前引用-->
+    <script src="../js/react-dom.development.js"></script>
+    <!-- 引入babel，用于将jsx转为js   -->
+    <script src="../js/babel.min.js"></script>
+    <!-- 引入props，用于对组件标签属性进行限制  -->
+    <script src="../js/prop-types.js"></script>
+
+    <script type="text/babel">
+        /*
+        *   高阶函数：如果一个函数符合以下两种规范中的任意一个，则该函数就为高阶函数
+        *       1.若A函数接受的参数类型为函数
+        *       2.若A函数调用的返回值已然是一个函数
+        *       常见的高阶函数 Promise forEach setTimeout等
+        *   函数的柯里化：通过函数调用继续返回函数的方式，实现多次接收参数最后统一处理的函数编码形式
+        * */
+        class Login extends React.Component {
+            //初始化状态
+            state = {
+                username:'',
+                password:''
+            }
+            render(){
+                return (
+                    <form onSubmit={this.handleSubmit} >
+                        用户名：<input type="text" name="username" onChange={this.saveFromData('username')}/><br/>
+                        密码：<input type="password" name="password" onChange={this.saveFromData('password')}/><br/>
+                        <button>登录</button>
+                    </form>
+                )
+            }
+            //表单提交的回调
+            handleSubmit = (e) => {
+                const {username,password} = this.state
+                alert(`你输入的用户名是：${username},密码是：${password}`)
+                e.preventDefault()//阻止表单提交
+            }
+            //保存表单数据到状态中
+            saveFromData = (dateType) => {
+                return e => {
+                    this.setState({
+                        [dateType]:e.target.value
+                    })
+                }
+            }
+        }
+        ReactDOM.render(<Login/>,document.getElementById('text'))
+
+    </script>
+</body>
+</html>

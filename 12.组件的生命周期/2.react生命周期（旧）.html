@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>react生命周期（旧）</title>
+</head>
+<body>
+    <!-- 准备好一个 “容器” -->
+    <div id="text">
+
+    </div>
+    <!--引入react核心库-->
+    <script src="../js/react.development.js"></script>
+    <!--引入react-dom,用于支持react操作dom 核心库必须要在react-dom之前引用-->
+    <script src="../js/react-dom.development.js"></script>
+    <!-- 引入babel，用于将jsx转为js   -->
+    <script src="../js/babel.min.js"></script>
+    <!-- 引入props，用于对组件标签属性进行限制  -->
+    <script src="../js/prop-types.js"></script>
+
+    <script type="text/babel">
+        /*
+            1. 初始化阶段: 由ReactDOM.render()触发---初次渲染
+                1.constructor()
+                2.componentWillMount()
+                3.render()
+                4.componentDidMount() =======>常用 一般在设个钩子中做一些初始化的事，例如开始定时器，或者发送网络请求 订阅消息
+            2. 更新阶段: 由组件内部this.setSate()或父组件重新render触发
+                1.shouldComponentUpdate()
+                2.componentWillUpdate()
+                3.render() =======>常用
+                4.componentDidUpdate()
+            3. 卸载组件: 由ReactDOM.unmountComponentAtNode()触发
+                1.componentWillUnmount() ======> 常用 一般在这个钩子中做一些收尾的事，例如关闭定时器，取消订阅消息
+        */
+        class Count extends React.Component{
+            constructor(props) {
+                console.log('Count-constructor')
+                super(props);
+            }
+            //组件将要挂载的钩子
+            componentWillMount(){
+                console.log('Count-componentWillMount')
+            }
+            //组件挂载完毕的钩子
+            componentDidMount(){
+                console.log('Count-componentDidMount')
+            }
+            //组件将要卸载的钩子
+            componentWillUnmount(){
+                console.log('Count-componentWillUnmount')
+            }
+            //控制组件更新的“阀门” 需要手动书写返回值，返回true才可以向下执行
+            shouldComponentUpdate(){
+                console.log('Count-shouldComponentUpdate')
+                return true
+            }
+            //组件更新完毕的钩子
+            componentDidUpdate(){
+                console.log('Count-componentDidUpdate')
+            }
+            //初始化状态
+            state = {count:0}
+            render(){
+                console.log('Count-render')
+                const {count} = this.state
+                return (
+                    <div>
+                        <h2>当前求和为：{count}</h2>
+                        <button onClick={this.add}>点我+1</button>
+                        <button onClick={this.death}>卸载组件</button>
+                        <button onClick={this.force}>不更改任何状态中的数据，强制更新</button>
+                    </div>
+                )
+            }
+            //加1按钮的回调
+            add = () => {
+                //获取原状态
+                const {count} = this.state
+                this.setState({
+                    count:count+1
+                })
+            }
+            //卸载组件的回调
+            death = () => {
+                ReactDOM.unmountComponentAtNode(document.getElementById('text'))
+            }
+            //强制更新的回调
+            force = () => {
+                this.forceUpdate() 
+            }
+        }
+        //父组件A
+        class A extends React.Component {
+            state = {carName:'bench'}
+            render() {
+                return (
+                    <div>
+                        <div>A组件</div>  
+                        <button onClick={this.changeCar}>换车</button>
+                        <B carName={this.state.carName}></B>
+                    </div>
+
+                )
+            }
+            changeCar = () => {
+                this.setState({
+                    carName:'auto'
+                })
+            }
+        }
+        //子组件B
+        class B extends React.Component {
+            //组件将要接收新的props的钩子
+            componentWillReceiveProps(props) {
+                console.log('B---componentWillReceiveProps',props);
+            }
+            shouldComponentUpdate(){
+                console.log('B---shouldComponentUpdate');
+                return true;
+            }
+            render() {
+                return (
+                    <div>B组件接收到的值是：{this.props.carName}</div>
+                )
+            }
+        }   
+        ReactDOM.render(<A/>,document.getElementById('text'))
+    </script>
+</body>
+</html>

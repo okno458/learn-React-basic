@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>受控组件</title>
+</head>
+<body>
+    <!-- 准备好一个 “容器” -->
+    <div id="text">
+
+    </div>
+    <!--引入react核心库-->
+    <script src="../js/react.development.js"></script>
+    <!--引入react-dom,用于支持react操作dom 核心库必须要在react-dom之前引用-->
+    <script src="../js/react-dom.development.js"></script>
+    <!-- 引入babel，用于将jsx转为js   -->
+    <script src="../js/babel.min.js"></script>
+    <!-- 引入props，用于对组件标签属性进行限制  -->
+    <script src="../js/prop-types.js"></script>
+    <script type="text/babel">
+        // 受控组件中输入框的值由其change事件接管，做对应的数据劫持操作，例如可以对输入框的值进行合法输入校验（匹配正则），此时表单数据由 React 组件来管理（“受开发者控制”）。
+        class Login extends React.Component {
+            //初始化状态
+            state = {
+                username:'',
+                password:''
+            }
+            render(){
+                return (
+                    <form action="https://www.atguigu.com" onSubmit={this.handleSubmit} >
+                        用户名：<input type="text" name="username" onChange={this.saveUsername}/><br/>
+                        密码：<input type="password" name="password" onChange={this.savePassword}/><br/>
+                        <button>登录</button>
+                    </form>
+                )
+            }
+            //表单提交的回调
+            handleSubmit = (e) => {
+                const {username,password} = this.state
+                alert(`你输入的用户名是：${username},密码是：${password}`)
+                e.preventDefault()//阻止表单提交
+            }
+            //保存用户名到状态中
+            saveUsername = (e) => {
+                this.setState({username:e.target.value})
+            }
+            //保存密码到状态中
+            savePassword = (e) =>{
+                this.setState({password:e.target.value})
+            }
+        }
+        ReactDOM.render(<Login/>,document.getElementById('text'))
+    </script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>4.createRef</title>
+</head>
+<body>
+    <!-- 准备好一个 “容器” -->
+    <div id="text">
+
+    </div>
+    <!--引入react核心库-->
+    <script src="../js/react.development.js"></script>
+    <!--引入react-dom,用于支持react操作dom 核心库必须要在react-dom之前引用-->
+    <script src="../js/react-dom.development.js"></script>
+    <!-- 引入babel，用于将jsx转为js   -->
+    <script src="../js/babel.min.js"></script>
+    <!-- 引入props，用于对组件标签属性进行限制  -->
+    <script src="../js/prop-types.js"></script>
+    <script type="text/babel">
+        class Demo extends React.Component {
+            /**
+             *  React.createRef()调用后可以返回一个容器，该容器可以存储被ref所标识的节点
+             *  只能存储一个元素
+             */
+            myRef = React.createRef()
+            myRef2 = React.createRef()
+            render() {
+                return (
+                    <div>
+                        <input ref={this.myRef} type="text" placeholder="点击按钮提示数据" />&nbsp;
+                        <button onClick={this.showData}>点我提示左侧的数据</button>&nbsp;
+                        <input ref={this.myRef2} type="text" placeholder="失去焦点提示数据" onBlur={this.showData2}/>&nbsp;
+                    </div>
+                );
+            }
+            showData = () => {
+                const {input1} = this;
+                alert(this.myRef.current.value)
+            }
+            showData2 = () => {
+                const {input2} = this;
+                alert(this.myRef2.current.value)
+            }
+        }
+        ReactDOM.render(<Demo/>,document.getElementById('text'))
+    </script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>事件处理</title>
+</head>
+<body>
+    <!-- 准备好一个 “容器” -->
+    <div id="text">
+
+    </div>
+    <!--引入react核心库-->
+    <script src="../js/react.development.js"></script>
+    <!--引入react-dom,用于支持react操作dom 核心库必须要在react-dom之前引用-->
+    <script src="../js/react-dom.development.js"></script>
+    <!-- 引入babel，用于将jsx转为js   -->
+    <script src="../js/babel.min.js"></script>
+    <!-- 引入props，用于对组件标签属性进行限制  -->
+    <script src="../js/prop-types.js"></script>
+    <script type="text/babel">
+        class Demo extends React.Component {
+            /*
+            *   （1）通过onXxx属性指定事件处理函数
+            *       react使用的是自定义事件，而不是原生的dom事件
+            *       react中的事件是通过事件委托的方式处理的（委托给组件最外层的元素）
+            *   （2）通过e.target得到发生事件的dom元素对象
+            *        不要过度使用ref
+            * */
+
+            //创建ref容器
+            myRef = React.createRef()
+            render() {
+                return (
+                    <div>
+                        <input ref={this.myRef} type="text" placeholder="点击按钮提示数据" />&nbsp;
+                        <button onClick={this.showData}>点我提示左侧的数据</button>&nbsp;
+                        <input type="text" placeholder="失去焦点提示数据" onBlur={this.showData2}/>&nbsp;
+                    </div>
+                );
+            }
+            showData = () => {
+                const {input1} = this;
+                alert(this.myRef.current.value)
+            }
+            showData2 = (e) => {
+                const {input2} = this;
+                alert(e.target.value)
+            }
+        }
+        ReactDOM.render(<Demo/>,document.getElementById('text'))
+    </script>
+</body>
+</html>

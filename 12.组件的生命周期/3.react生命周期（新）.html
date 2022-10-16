@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>react生命周期（新）</title>
+</head>
+<body>
+    <!-- 准备好一个 “容器” -->
+    <div id="text">
+
+    </div>
+    <!--引入react核心库-->
+    <script src="../js/17.0.1/react.development.js"></script>
+    <!--引入react-dom,用于支持react操作dom 核心库必须要在react-dom之前引用-->
+    <script src="../js/17.0.1/react-dom.development.js"></script>
+    <!-- 引入babel，用于将jsx转为js   -->
+    <script src="../js/17.0.1/babel.min.js"></script>
+    <!-- 引入props，用于对组件标签属性进行限制  -->
+    <script src="../js/17.0.1/prop-types.js"></script>
+
+    <script type="text/babel">
+        class Count extends React.Component{
+            constructor(props) {
+                console.log('Count-constructor')
+                super(props);
+            }
+          
+            //组件挂载完毕的钩子
+            componentDidMount(){
+                console.log('Count-componentDidMount')
+            }
+            //组件将要卸载的钩子
+            componentWillUnmount(){
+                console.log('Count-componentWillUnmount')
+            }
+            //控制组件更新的“阀门” 需要手动书写返回值，返回true才可以向下执行
+            shouldComponentUpdate(){
+                console.log('Count-shouldComponentUpdate')
+                return true
+            }
+            //若state的值在任何时候都取决于props则可以使用getDerivedStateFromProps
+              static getDerivedStateFromProps(props,state) {
+                console.log('getDerviedStateFromProps',props,state);
+                return null
+            }
+            //在最近一次渲染输出（提交到DOM节点）之前调用，它是的组件能在发生更改之前从DOM中捕获一些信息（例如滚动位置）、
+            //此生命周期的任何返回值将作为参数传递给componentDidUpdate()
+            //在更新之前获取快照
+            getSnapshotBeforeUpdate(){
+                console.log('getSnapshotBeforeUpdate')
+                return null
+            }
+            //组件更新完毕的钩子
+            componentDidUpdate(preProps,preState,snapshotValue) {
+                //可以接收两个参数，preProps和preState,snapshotValue 代表更新之前的props和更新之前的state,
+                //snapshotValue就是getSnapshotBeforeUpdate()的返回值
+                console.log('Count-componentDidUpdate',preProps,preState,snapshotValue)
+            }
+            //初始化状态
+            state = {count:0}
+            render(){
+                console.log('Count-render')
+                const {count} = this.state
+                return (
+                    <div>
+                        <h2>当前求和为：{count}</h2>
+                        <button onClick={this.add}>点我+1</button>
+                        <button onClick={this.death}>卸载组件</button>
+                        <button onClick={this.force}>不更改任何状态中的数据，强制更新</button>
+                    </div>
+                )
+            }
+            //加1按钮的回调
+            add = () => {
+                //获取原状态
+                const {count} = this.state
+                this.setState({
+                    count:count+1
+                })
+            }
+            //卸载组件的回调
+            death = () => {
+                ReactDOM.unmountComponentAtNode(document.getElementById('text'))
+            }
+            //强制更新的回调
+            force = () => {
+                this.forceUpdate() 
+            }
+        }  
+        ReactDOM.render(<Count count={199}/>,document.getElementById('text'))
+    </script>
+</body>
+</html>

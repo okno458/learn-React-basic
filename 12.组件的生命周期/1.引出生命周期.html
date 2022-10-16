@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>1.引出组件的生命周期</title>
+</head>
+<body>
+    <!-- 准备好一个 “容器” -->
+    <div id="text">
+
+    </div>
+    <!--引入react核心库-->
+    <script src="../js/react.development.js"></script>
+    <!--引入react-dom,用于支持react操作dom 核心库必须要在react-dom之前引用-->
+    <script src="../js/react-dom.development.js"></script>
+    <!-- 引入babel，用于将jsx转为js   -->
+    <script src="../js/babel.min.js"></script>
+    <!-- 引入props，用于对组件标签属性进行限制  -->
+    <script src="../js/prop-types.js"></script>
+
+    <script type="text/babel">
+        class Life extends React.Component {
+            state = {opacity:1}
+            //render调用时机：初始化渲染，状态更新之后
+            render(){
+                return (
+                    <div>
+                        <h2 style={{opacity:'this.state.opacity'}} >React</h2>
+                        <button onClick={this.death}>button</button>
+                    </div>
+                )
+            }
+            //组件挂载完毕时调用
+            componentDidMount(){
+                this.timer = setInterval(()=>{
+                    let {opacity} = this.state
+                    opacity -= 0.16
+                    if(opacity <= 0){
+                        opacity = 1
+                    }
+                    this.setState({
+                        opacity
+                    })
+                },200)
+            }
+            //组件将要卸载时调用
+            componentWillUnmount(){
+                clearInterval(this.timer)
+            }
+            death = () => {
+                //卸载组件
+                ReactDOM.unmountComponentAtNode(document.getElementById('text'))
+            }
+        }
+        ReactDOM.render(<Life/>,document.getElementById('text'))
+
+    </script>
+</body>
+</html>

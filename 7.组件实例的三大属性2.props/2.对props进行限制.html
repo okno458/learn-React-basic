@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>对props进行限制</title>
+</head>
+<body>
+    <!-- 准备好一个 “容器” -->
+    <div id="text1">
+
+    </div>
+    <div id="text2">
+
+    </div>
+    <div id="text3">
+
+    </div>
+    <!--引入react核心库-->
+    <script src="../js/react.development.js"></script>
+    <!--引入react-dom,用于支持react操作dom 核心库必须要在react-dom之前引用-->
+    <script src="../js/react-dom.development.js"></script>
+    <!-- 引入babel，用于将jsx转为js   -->
+    <script src="../js/babel.min.js"></script>
+    <!-- 引入props，用于对组件标签属性进行限制  -->
+    <script src="../js/prop-types.js"></script>
+    <script type="text/babel">
+        //创建组件
+        class Person extends React.Component{
+            render(){
+                const {name,age,sex} = this.props
+                //props是只读的，不允许改
+                // this.props.name = 'jack'//此行代码报错，因为props是只读的
+                return (
+                    <ul>
+                        <li>姓名：{name}</li>
+                        <li>性别：{sex}</li>
+                        <li>年龄：{age + 1}</li>
+                    </ul>
+                )
+            }
+        }
+        //对标签属性进行类型，必要性的限制
+        Person.propTypes = {
+            // 引入props,全局就会添加PropTypes这个对象
+            name:PropTypes.string.isRequired, //限制name为必填项且为字符串类型
+            sex:PropTypes.string, //限制sex为字符串类型
+            age:PropTypes.number,//限制age为数字类型
+            speak:PropTypes.func,//限制speak为函数类型
+        }
+        //指定默认标签属性值
+        Person.defaultProps = {
+            sex:'男',//给sex添加默认值
+            age:18//给age添加默认值
+        }
+        const p = {name:'liu',age:18,sex:'female'}//批量传递props数据
+        //扩展运算符不能展开对象，因为react和babel的作用，所以这种形式只对组件标签有效，{}中需要书写js表达式
+        ReactDOM.render(<Person {...p} />,document.getElementById('text1'))
+        ReactDOM.render(<Person name='liu' speak={speak}/>,document.getElementById('text2'))
+        ReactDOM.render(<Person name='liu' age={18} sex='female'/>,document.getElementById('text3'))
+        function speak() {
+            console.log('speak')
+        }
+    </script>
+</body>
+</html>
